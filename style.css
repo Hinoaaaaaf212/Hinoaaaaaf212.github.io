@@ -133,24 +133,6 @@ h1 .dot { color: var(--accent); }
 
 .handle { margin: 6px 0 0; color: var(--muted); font-weight: 500; }
 
-.lead { margin: 16px 0 0; }
-
-.badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 11px;
-  border-radius: 10px;
-  background: var(--surface-2);
-  border: 1.5px solid var(--line);
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.badge img { width: 16px; height: 16px; }
-
 .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
 
 .btn {
