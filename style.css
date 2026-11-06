@@ -181,6 +181,8 @@ main { display: grid; gap: 22px; margin-top: 24px; }
   width: 148px;
   height: 148px;
   margin-top: -74px;
+  position: relative;
+  z-index: 1;
   border-radius: 50%;
   border: 7px solid var(--edge-teal);
   background: var(--fill-soft);
