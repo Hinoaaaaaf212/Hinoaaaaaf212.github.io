@@ -66,7 +66,7 @@ body::after{content:"";position:fixed;inset:0;background-image:linear-gradient(#
 #bar{position:fixed;top:0;left:0;height:4px;width:0;background:linear-gradient(90deg,var(--a),var(--b),var(--c),var(--d));z-index:10000;box-shadow:0 0 18px var(--b)}
 .caret{display:inline-block;width:3px;height:1em;background:#ec4899;margin-left:4px;vertical-align:-2px;animation:blink 1s steps(1) infinite}
 @keyframes blink{50%{opacity:0}}
-.letter{display:inline-block;animation:bounceIn .8s both}
+.letter{display:inline-block;animation:bounceIn .8s both,shine 3s linear infinite}
 .letter:hover{animation:jelly .6s;color:#facc15}
 #loader{position:fixed;inset:0;background:#05010d;z-index:20000;display:grid;place-items:center;transition:opacity .8s,transform .8s}
 #loader.done{opacity:0;transform:scale(1.4);pointer-events:none}
@@ -214,7 +214,7 @@ body::after{content:"";position:fixed;inset:0;background-image:linear-gradient(#
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 let p=0;const ld=setInterval(()=>{p+=Math.random()*18;$('#ldbar').style.width=Math.min(p,100)+'%';if(p>=100){clearInterval(ld);setTimeout(()=>$('#loader').classList.add('done'),250)}},90);
 $('#yr').textContent=new Date().getFullYear();
-const nm=$('#name');nm.innerHTML=[...'simply'].map((c,i)=>`<span class="letter" style="animation-delay:${1.2+i*.08}s">${c}</span>`).join('');
+const nm=$('#name');nm.innerHTML=[...'simply'].map((c,i)=>`<span class="letter grad-text" style="animation-delay:${1.2+i*.08}s,${i*.15}s">${c}</span>`).join('');
 const words=['builds PocketPass 📡','brought StreetPass back 🔥','decrypts 3DS files on a phone 🎮','writes way too much Kotlin ☕','overdoes the animations ✨','holds fish 🐟'];
 let wi=0,ci=0,del=false;const tp=$('#type');
 (function type(){const w=words[wi];tp.textContent=w.slice(0,ci);if(!del&&ci<w.length)ci++;else if(del&&ci>0)ci--;else if(!del){del=true;return setTimeout(type,1400)}else{del=false;wi=(wi+1)%words.length}setTimeout(type,del?35:70)})();
