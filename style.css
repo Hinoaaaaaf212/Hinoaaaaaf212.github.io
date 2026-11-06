@@ -217,7 +217,7 @@ h2::before {
 
 .project:hover { transform: translateY(-3px); border-color: var(--accent); }
 
-.project.featured { grid-column: 1 / -1; background: var(--accent-soft); border-color: transparent; }
+.project.featured { background: var(--accent-soft); border-color: transparent; }
 .project.featured:hover { border-color: var(--accent); }
 
 .project-top { display: flex; align-items: center; gap: 12px; }
