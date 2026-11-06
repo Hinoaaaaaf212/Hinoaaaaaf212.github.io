@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&display=swap">
-<link rel="stylesheet" href="style.css?v=6">
+<link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
 <svg class="sprite" aria-hidden="true" focusable="false">
@@ -53,6 +53,12 @@
 <span class="track-text"><b id="now-name"></b><span id="now-artist"></span></span>
 <span class="eq" id="now-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
 </a>
+</section>
+
+<section class="card reveal" id="top" hidden>
+<h2>Top artists</h2>
+<ol class="artists" id="artist-list"></ol>
+<p class="when">All time</p>
 </section>
 
 <section class="card reveal" id="projects">
@@ -149,6 +155,36 @@ if (reduced || !("IntersectionObserver" in window)) {
   }
   load();
   setInterval(load, 30000);
+})();
+(function () {
+  var url = "https://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=simply0001&api_key=ce487b281debdfc14343ecbb9eefbe87&format=json&period=overall&limit=5";
+  fetch(url).then(function (response) {
+    return response.ok ? response.json() : null;
+  }).then(function (data) {
+    var artists = data && data.topartists && data.topartists.artist;
+    if (!artists || !artists.length) return;
+    var list = document.getElementById("artist-list");
+    artists.slice(0, 5).forEach(function (artist, index) {
+      var item = document.createElement("li");
+      var link = document.createElement("a");
+      link.href = artist.url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      var rank = document.createElement("span");
+      rank.className = "rank";
+      rank.textContent = String(index + 1);
+      var name = document.createElement("span");
+      name.className = "name";
+      name.textContent = artist.name;
+      var plays = document.createElement("span");
+      plays.className = "plays";
+      plays.textContent = Number(artist.playcount).toLocaleString() + " plays";
+      link.append(rank, name, plays);
+      item.appendChild(link);
+      list.appendChild(item);
+    });
+    document.getElementById("top").hidden = false;
+  }).catch(function () {});
 })();
 </script>
 </body>
