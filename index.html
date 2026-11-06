@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&display=swap">
-<link rel="stylesheet" href="style.css?v=5">
+<link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 <svg class="sprite" aria-hidden="true" focusable="false">
@@ -46,6 +46,15 @@
 </aside>
 
 <main class="content">
+<section class="card reveal" id="now" hidden>
+<div class="now-head"><h2 id="now-label">Now playing</h2><span class="when" id="now-when"></span></div>
+<a class="track" id="now-link" href="https://www.last.fm/user/simply0001" rel="noopener noreferrer">
+<span class="cover" id="now-cover"><img id="now-art" alt="" width="64" height="64"><svg class="icon"><use href="#i-lastfm"/></svg></span>
+<span class="track-text"><b id="now-name"></b><span id="now-artist"></span></span>
+<span class="eq" id="now-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+</a>
+</section>
+
 <section class="card reveal" id="projects">
 <h2>Projects</h2>
 <div class="projects">
@@ -101,6 +110,46 @@ if (reduced || !("IntersectionObserver" in window)) {
   }, { threshold: 0.1 });
   reveals.forEach(function (el) { observer.observe(el); });
 }
+(function () {
+  var url = "https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=simply0001&api_key=ce487b281debdfc14343ecbb9eefbe87&format=json&limit=1";
+  var placeholder = "2a96cbd8b46e442fc41c2b86b821562f";
+  var el = function (id) { return document.getElementById(id); };
+  function ago(seconds) {
+    var minutes = Math.round((Date.now() / 1000 - seconds) / 60);
+    if (minutes < 1) return "just now";
+    if (minutes < 60) return minutes + " min ago";
+    var hours = Math.round(minutes / 60);
+    if (hours < 24) return hours + " h ago";
+    var days = Math.round(hours / 24);
+    return days + (days === 1 ? " day ago" : " days ago");
+  }
+  function load() {
+    fetch(url).then(function (response) {
+      return response.ok ? response.json() : null;
+    }).then(function (data) {
+      var track = data && data.recenttracks && data.recenttracks.track && data.recenttracks.track[0];
+      if (!track) return;
+      var playing = !!(track["@attr"] && track["@attr"].nowplaying === "true");
+      el("now-label").textContent = playing ? "Now playing" : "Last played";
+      el("now-when").textContent = playing || !track.date ? "" : ago(Number(track.date.uts));
+      el("now-name").textContent = track.name;
+      el("now-artist").textContent = track.artist && track.artist["#text"] || "";
+      el("now-link").href = track.url || "https://www.last.fm/user/simply0001";
+      el("now-link").setAttribute("aria-label", (playing ? "Now playing: " : "Last played: ") + track.name + " by " + el("now-artist").textContent);
+      el("now-eq").classList.toggle("on", playing);
+      var art = (track.image || []).map(function (image) { return image["#text"]; }).filter(Boolean).pop();
+      if (art && art.indexOf(placeholder) < 0) {
+        if (el("now-art").getAttribute("src") !== art) el("now-art").src = art;
+        el("now-cover").classList.add("has-art");
+      } else {
+        el("now-cover").classList.remove("has-art");
+      }
+      el("now").hidden = false;
+    }).catch(function () {});
+  }
+  load();
+  setInterval(load, 30000);
+})();
 </script>
 </body>
 </html>
